@@ -1,0 +1,13 @@
+services:
+  db: 
+    image: postgres:16
+    restart: always
+    container_name: cachibache-db
+    environment:
+      POSTGRES_USER: usuario_app
+      POSTGRES_PASSWORD: root123
+      POSTGRES_DB: cachibache
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./database/database.sqlite:/docker-entrypoint-initdb.d/database.sqlite
