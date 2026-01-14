@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cachibache-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db  # Importante: Nombre del servicio abajo
+      - DB_PORT=5432
+      - DB_DATABASE=cachibache
+      - DB_USERNAME=usuario_app
+      - DB_PASSWORD=root123
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    restart: always
+    container_name: cachibache-db
+    environment:
+      POSTGRES_USER: usuario_app
+      POSTGRES_PASSWORD: root123
+      POSTGRES_DB: cachibache
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
