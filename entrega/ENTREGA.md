@@ -35,7 +35,7 @@ Despliegue real en la nube, gestionado mediante el `Dockerfile` y conectado a un
 
 * [cite_start]**Servicio Web:** `Laravel-1` desplegado mediante Docker.
 * [cite_start]**Base de Datos:** `cachibache_db` (PostgreSQL).
-* [cite_start]**Automatización:** El comando `CMD` realiza la migración forzada de la base de datos y lanza el servidor en el puerto dinámico `$PORT`[cite: 4, 5].
+* [cite_start]**Automatización:** El comando `CMD` realiza la migración forzada de la base de datos y lanza el servidor en el puerto dinámico `$PORT`.
 
 > ### 📸 CAPTURA 3: Panel de control de Render
 >
@@ -43,14 +43,3 @@ Despliegue real en la nube, gestionado mediante el `Dockerfile` y conectado a un
 > ![Despliegue Render](./imagenes/cap4.png)
 
 ---
-
-## Preguntas Técnicas de Despliegue
-
-1. **¿Por qué usamos `$PORT` en el Dockerfile?**
-   Render asigna un puerto dinámico a cada despliegue. [cite_start]El comando `php artisan serve --port=$PORT` permite que Laravel escuche en el puerto correcto asignado por la infraestructura de la nube[cite: 4].
-
-2. **¿Qué función tiene el comando `chown` en el Dockerfile?**
-   [cite_start]Establece a `www-data` como propietario de las carpetas `storage` y `cache`, asegurando que el servidor PHP tenga permisos de escritura necesarios para logs y sesiones[cite: 1].
-
-3. **¿Cuál es la ventaja de usar `docker-compose` en el entorno DEV?**
-   [cite_start]Permite levantar un ecosistema completo (App + Base de Datos) con un solo comando, asegurando que todos los desarrolladores usen la misma versión de software y configuración de red[cite: 2].
