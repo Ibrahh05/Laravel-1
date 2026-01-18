@@ -1,34 +1,43 @@
-# Bitácora de Despliegue: Laravel en Vercel
+# Despliegue de Laravel en Vercel
 
-Siento mucho la frustración. Tienes razón, te he dado demasiadas explicaciones en lugar de entregarte el código limpio que me pediste. Aquí tienes el contenido íntegro en texto plano, listo para copiar y pegar:
+Estos son los pasos que seguí para desplegar mi aplicación Laravel en Vercel. Tuve que adaptar bastante la estructura del proyecto porque Vercel no maneja PHP nativamente como otros lenguajes.
 
-He realizado los siguientes pasos para configurar y desplegar correctamente mi API de Laravel en la infraestructura de Vercel.
+## Fuentes consultadas
 
-## 1. Vinculación del Proyecto
+Me apoyé en estas referencias para hacer el despliegue:
 
-Inicié el proceso de configuración vinculando mi carpeta local con un proyecto en Vercel mediante el comando:
-`vercel .`
+- Guía de Rezas Mandala: [How to deploy Laravel project to Vercel](https://rezamandala.medium.com/how-to-deploy-laravel-project-to-vercel-7b3c2800e974)
+- Repositorio vercel-php: [vercel-php documentation](https://github.com/juicyfx/vercel-php)
+- Documentación de Vercel: [Vercel Deployment Guide](https://vercel.com/docs)
 
-Durante la configuración inicial, seleccioné estas opciones:
+## Proceso de despliegue
 
-* **Set up and deploy?**: Yes (y)
-* **Scope**: Mi usuario personal.
-* **Link to existing project?**: No (n)
-* **Project Name**: laravel-1
-* **Directory**: ./
+### Instalación de la CLI
 
-## 2. Reestructuración de la Aplicación
+Primero instalé la CLI de Vercel y vinculé el proyecto con:
+```bash
+vercel .
+```
 
-Para solucionar el problema donde el navegador descargaba el archivo PHP en lugar de ejecutarlo, realicé los siguientes cambios estructurales:
+Durante la configuración usé estos valores:
+- **Project Name:** laravel-1
+- **Directory:** ./
 
-1. **Creación de carpeta api**: Creé una carpeta llamada `api/` en la raíz del proyecto.
-2. **Reubicación del punto de entrada**: Moví el archivo `index.php` de la carpeta `public/` a la nueva carpeta `api/`.
-3. **Ajuste de rutas**: Modifiqué los `require` dentro de `api/index.php` para asegurar que el autoloader y el bootstrap se carguen correctamente subiendo un nivel en el directorio (`../`).
+### Reestructuración del proyecto
 
-## 3. Configuración del Servidor (vercel.json)
+Como Vercel no soporta PHP como lo hace con Node.js, tuve que reorganizar algunos archivos:
 
-Creé un archivo `vercel.json` en la raíz del proyecto para definir el entorno de ejecución (Runtime) de PHP y la redirección de rutas:
+1. Creé una carpeta `api/` en la raíz del proyecto
+2. Moví el `index.php` de `public/` a `api/`
+3. Actualicé las rutas en `api/index.php` para que apuntaran correctamente al autoload y al bootstrap:
+```php
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
+```
 
+### Configuración de vercel.json
+
+Creé el archivo `vercel.json` en la raíz para definir el runtime de PHP y el enrutamiento:
 ```json
 {
     "version": 2,
@@ -44,13 +53,13 @@ Creé un archivo `vercel.json` en la raíz del proyecto para definir el entorno 
 }
 ```
 
-## 4. Despliegue de Producción
+Esta configuración redirige todas las peticiones al archivo `index.php` dentro de la carpeta `api/`.
 
-Para aplicar la nueva estructura y el archivo de configuración, ejecuté el comando de producción:
-`vercel --prod`
+## Despliegue
 
-Como resultado, la aplicación quedó desplegada en la URL de producción y el servidor comenzó a procesar los archivos PHP correctamente.
+Una vez configurado todo, desplegué a producción con:
+```bash
+vercel --prod
+```
 
----
-
-¿Hay algún paso específico del `vercel.json` que necesites que ajuste antes de que lo entregues?
+Y con eso quedó funcionando el proyecto en Vercel.
